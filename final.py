@@ -62,8 +62,8 @@ def update_grid_v(phi_grid, sigma, k, D, dx, dt, grid_size, v0):
     return phi_grid
 
 
-def animation(phi_grid, sigma, k, D, dx, dt, grid_size, v0):
-    """Run the animation of the cahn-hiliard equation."""
+def animation(phi_grid, sigma, k, D, dx, dt, grid_size):
+
 
     fig, ax = plt.subplots()
     im = ax.imshow(phi_grid, animated=True)
@@ -74,13 +74,15 @@ def animation(phi_grid, sigma, k, D, dx, dt, grid_size, v0):
     for i in range(1000000):
 
         # move one step forward in the simulation, updating phi at every point.
-        phi_grid = update_grid_v(phi_grid, sigma, k, D, dx, dt, grid_size, v0)
+        phi_grid = update_grid(phi_grid, sigma, k, D, dx, dt, grid_size)
 
         # every 50 sweeps update the animation.
         if i % 50 == 0:
             
             plt.cla()
+            cbar.remove()
             im = ax.imshow(phi_grid, interpolation='bilinear', animated=True)
+            cbar = fig.colorbar(im, ax=ax)
             plt.draw()
             plt.pause(0.00001)
 
@@ -135,6 +137,32 @@ def task4(phi_grid, sigma, k, D, dx, dt, grid_size):
             break
 
 
+def task5(phi_grid, sigma, k, D, dx, dt, grid_size, v0):
+
+
+    fig, ax = plt.subplots()
+    im = ax.imshow(phi_grid, animated=True)
+    cbar = fig.colorbar(im, ax=ax)
+
+    # choose a large range so that it will likely converge before then, but will never
+    # continue forever.
+    for i in range(1000000):
+
+        # move one step forward in the simulation, updating phi at every point.
+        phi_grid = update_grid_v(phi_grid, sigma, k, D, dx, dt, grid_size, v0)
+
+        # every 50 sweeps update the animation.
+        if i % 50 == 0:
+            
+            plt.cla()
+            cbar.remove()
+            im = ax.imshow(phi_grid, interpolation='bilinear', animated=True)
+            cbar = fig.colorbar(im, ax=ax)
+            plt.draw()
+            plt.pause(0.00001)
+            # print(phi_grid.max())
+
+
 def main():
     """Evaluate command line args to choose a function.
     """
@@ -155,12 +183,14 @@ def main():
 
     dt = float(sys.argv[2])
     if mode == "vis":
-        v0 = float(sys.argv[3])
-        animation(phi_grid, sigma, k, D, dx, dt, grid_size, v0)
+        animation(phi_grid, sigma, k, D, dx, dt, grid_size)
     elif mode == "3":
         task3(phi_grid, sigma, k, D, dx, dt, grid_size)
     elif mode == "4":
         task4(phi_grid, sigma, k, D, dx, dt, grid_size)
+    elif mode == "5":
+        v0 = float(sys.argv[3])
+        task5(phi_grid, sigma, k, D, dx, dt, grid_size, v0)
 
 
 if __name__=="__main__":
