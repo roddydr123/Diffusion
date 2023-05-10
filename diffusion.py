@@ -42,11 +42,11 @@ def update_grid_v(phi_grid, sigma, k, D, dx, dt, grid_size, v0):
 
     # add drift velocity.
     vx = -v0 * np.sin(2 * np.pi * ycoords[0] / grid_size)
-    v = np.tile(vx, [grid_size, 1])
-    v_dot_grad_phi = (
+    vx = np.tile(vx, [grid_size, 1])
+
+    d_phi_dx = (
         np.roll(phi_grid, 1, axis=0) -
-        np.roll(phi_grid, -1, axis=0) *
-        v)
+        np.roll(phi_grid, -1, axis=0)) / (2 * dx)
 
     # perform the grid update.
     phi_grid += dt * (D * ((
@@ -54,10 +54,10 @@ def update_grid_v(phi_grid, sigma, k, D, dx, dt, grid_size, v0):
             np.roll(phi_grid, -1, axis=1) +
             np.roll(phi_grid, 1, axis=0) +
             np.roll(phi_grid, -1, axis=0) -
-            4 * phi_grid) / dx**2) +
+            (4 * phi_grid)) / dx**2) +
             rho -
-            k * phi_grid -
-            v_dot_grad_phi) / (2 * dx)
+            (k * phi_grid) +    # one minus sign was messing things up so change this one.
+            (d_phi_dx * vx))
 
     return phi_grid
 
@@ -160,7 +160,6 @@ def task5(phi_grid, sigma, k, D, dx, dt, grid_size, v0):
             cbar = fig.colorbar(im, ax=ax)
             plt.draw()
             plt.pause(0.00001)
-            # print(phi_grid.max())
 
 
 def main():
