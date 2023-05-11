@@ -56,7 +56,7 @@ def update_grid_v(phi_grid, sigma, k, D, dx, dt, grid_size, v0):
             np.roll(phi_grid, -1, axis=0) -
             (4 * phi_grid)) / dx**2) +
             rho -
-            (k * phi_grid) +    # one minus sign was messing things up so change this one.
+            (k * phi_grid) -
             (d_phi_dx * vx))
 
     return phi_grid
