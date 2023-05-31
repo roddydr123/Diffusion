@@ -2,6 +2,10 @@
 
 ### Diffusion model laid out on a grid. A source term $\rho$ is located in the centre of the grid, and a spatially dependent velocity was added. This problem was found in a past paper for the Modelling and Visualisation in Physics course (paper.pdf). The dynamics of the system were studied to find when a steady state was reached and how concentration depended on radial distance from the source.
 
+The concentration is governed by:
+
+$\frac{\partial \phi}{\partial t} = D \nabla^2 \phi + \rho - \kappa \phi$
+
 ![.](results/v0.5.png)
 
 This is a visualisation of the concentration field in steady state with the source term located at the centre and the spatially dependent velocity leading to the deviation from circular symmetry. The concentration was found to drop off exponentially and reach steady state after about 2000 update cycles.
